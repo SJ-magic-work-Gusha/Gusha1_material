@@ -34,6 +34,7 @@ private:
 	SOURCE_CODE* VisualizedSourceCode;
 	
 	MOV mov;
+	string FileName;
 	const bool MovSound_on;
 	bool b_mov_paused;
 	float Last_pos_mov;
@@ -52,7 +53,7 @@ private:
 public:
 	/****************************************
 	****************************************/
-	ofApp(int _Cam_id, bool _MovSound_on);
+	ofApp(int _Cam_id,  string _FileName, bool _MovSound_on);
 	~ofApp();
 	
 	void setup();

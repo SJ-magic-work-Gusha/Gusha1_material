@@ -2,6 +2,19 @@
 ************************************************************/
 #include "mov.h"
 
+/* for dir search */
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h> 
+#include <unistd.h> 
+#include <dirent.h>
+#include <string>
+
+using namespace std;
+/* */
+
+
+
 /************************************************************
 ************************************************************/
 
@@ -34,8 +47,16 @@ void MOV::Clear_fbo(ofFbo& fbo)
 
 /******************************
 ******************************/
-void MOV::setup(bool MovSound_on)
+bool MOV::setup(string FileName, bool MovSound_on)
 {
+	/********************
+	********************/
+	if(FileName == "NotSet"){
+		print_MovFileList();
+		// std::exit(1);
+		return false;
+	}
+	
 	/********************
 	********************/
 	fbo.allocate(VIDEO_WIDTH, VIDEO_HEIGHT, GL_RGBA, 0);
@@ -44,12 +65,66 @@ void MOV::setup(bool MovSound_on)
 	/********************
 	********************/
 	// if(video.load("mov/LIVEAID Hap 640.mov")){
-	if(video.load("mov/mov.mp4")){
+	if(video.load("mov/" + FileName)){
 		setup_video(video, MovSound_on);
 	}else{
 		printf("> No mov file.\n");
 		fflush(stdout);
 	}
+	
+	return true;
+}
+
+/******************************
+******************************/
+void MOV::print_MovFileList()
+{
+	/********************
+	********************/
+	const string dirname = "../../../data/mov";
+	
+	DIR *pDir;
+	struct dirent *pEnt;
+	struct stat wStat;
+	string wPathName;
+
+	pDir = opendir( dirname.c_str() );
+	if ( NULL == pDir ) { ERROR_MSG(); std::exit(1); }
+	
+	printf("> movie files\n");
+	pEnt = readdir( pDir );
+	while ( pEnt ) {
+		// .と..は処理しない
+		if ( strcmp( pEnt->d_name, "." ) && strcmp( pEnt->d_name, ".." ) ) {
+		
+			wPathName = dirname + "/" + pEnt->d_name;
+			
+			// ファイルの情報を取得
+			if ( stat( wPathName.c_str(), &wStat ) ) {
+				printf( "Failed to get stat %s \n", wPathName.c_str() );
+				break;
+			}
+			
+			if ( S_ISDIR( wStat.st_mode ) ) {
+				// nothing.
+			} else {
+			
+				vector<string> str = ofSplitString(pEnt->d_name, ".");
+				if( (str[str.size()-1] == "mp4") ||  (str[str.size()-1] == "mov") ){
+					// string str_NewFileName = wPathName;
+					// string str_NewFileName = pEnt->d_name;
+					string* str_NewFileName = new string(pEnt->d_name);
+					
+					// SoundFileNames.push_back(str_NewFileName);
+					printf("\t%s\n", str_NewFileName->c_str());
+				}
+			}
+		}
+		
+		pEnt = readdir( pDir ); // 次のファイルを検索する
+	}
+
+	closedir( pDir );
 }
 
 /******************************

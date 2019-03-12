@@ -45,6 +45,7 @@ private:
 	
 	/****************************************
 	****************************************/
+	void print_MovFileList();
 	void Clear_fbo(ofFbo& fbo);
 	void draw_to_fbo();
 	
@@ -60,7 +61,7 @@ public:
 	MOV();
 	~MOV();
 	
-	void setup(bool MovSound_on);
+	bool setup(string FileName, bool MovSound_on);
 	void update();
 	void draw(float _x, float _y, float _w, float _h);
 	void publish_syphon(ofxSyphonServer& SyphonServer);

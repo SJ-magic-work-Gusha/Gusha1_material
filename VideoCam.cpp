@@ -22,7 +22,7 @@ SJ_VIDEO_CAM::~SJ_VIDEO_CAM()
 
 /******************************
 ******************************/
-void SJ_VIDEO_CAM::setup(int _Cam_id)
+bool SJ_VIDEO_CAM::setup(int _Cam_id)
 {
 	/********************
 	********************/
@@ -34,7 +34,8 @@ void SJ_VIDEO_CAM::setup(int _Cam_id)
 	vector< ofVideoDevice > Devices = VideoCam->listDevices();// 上 2行がないと、List表示されない.
 	
 	if(_Cam_id == -1){
-		std::exit(1);
+		// std::exit(1);
+		return false;
 	}else{
 		if(Devices.size() <= _Cam_id) { ERROR_MSG(); std::exit(1); }
 		
@@ -49,6 +50,8 @@ void SJ_VIDEO_CAM::setup(int _Cam_id)
 	********************/
 	fbo.allocate(VIDEO_WIDTH, VIDEO_HEIGHT, GL_RGBA, 0);
 	Clear_fbo(fbo);
+	
+	return true;
 }
 
 /******************************

@@ -49,7 +49,7 @@ public:
 	SJ_VIDEO_CAM();
 	~SJ_VIDEO_CAM();
 	
-	void setup(int _Cam_id);
+	bool setup(int _Cam_id);
 	void update();
 	void draw(float _x, float _y, float _w, float _h);
 	void publish_syphon(ofxSyphonServer& SyphonServer);

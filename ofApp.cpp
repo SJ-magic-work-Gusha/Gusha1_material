@@ -8,8 +8,9 @@
 
 /******************************
 ******************************/
-ofApp::ofApp(int _Cam_id, bool _MovSound_on)
+ofApp::ofApp(int _Cam_id, string _FileName, bool _MovSound_on)
 : Cam_id(_Cam_id)
+, FileName(_FileName)
 , MovSound_on(_MovSound_on)
 , b_DispGui(true)
 , b_ShowFrameRate(false)
@@ -63,12 +64,17 @@ void ofApp::setup(){
 	
 	/********************
 	********************/
-	VideoCam.setup(Cam_id);
+	int ErrorCount = 0;
+	
+	if(!VideoCam.setup(Cam_id)) ErrorCount++;
 	
 	VisualizedSourceCode->setup();
 	
-	mov.setup(MovSound_on);
+	if(!mov.setup(FileName, MovSound_on)) ErrorCount++;
 	Last_pos_mov = Gui_Global->pos_mov;
+	
+	/* */
+	if(0 < ErrorCount)  std::exit(1);
 }
 
 /******************************
